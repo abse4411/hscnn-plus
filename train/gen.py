@@ -27,7 +27,7 @@ def last_path_name(name):
 
 
 def main():
-    model_path = './models/hscnn_5layer_dim10_765.pkl'
+    model_path = './models/hscnn_5layer_dim10_281.pkl'
     cfg = build_config('config.ini')
     result_path = './out'
 
@@ -68,11 +68,11 @@ def main():
             arr = img_res_limits.transpose(1, 2, 0)
             rgb_name = last_path_name(test_data.rgb_names[i])
             rgb_name = rgb_name[0:rgb_name.rfind('_')]
-            mkdir(f'{result_path}/{rgb_name}')
+            mkdir(f'{result_path}/{rgb_name}_ms')
             for ch in tqdm(range(31), desc=f'generating {rgb_name} spe files'):
                 img_arr = arr[:, :, ch]
                 img = Image.fromarray(img_arr.astype(np.uint16), mode="I;16")
-                img.save(f'{result_path}/{rgb_name}/{rgb_name}_ms_{str(ch + 1).zfill(2)}.png', 'png')
+                img.save(f'{result_path}/{rgb_name}_ms/{rgb_name}_ms_{str(ch + 1).zfill(2)}.png', 'png')
                 # img.show()
 
 
