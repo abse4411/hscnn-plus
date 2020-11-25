@@ -49,12 +49,13 @@ def build_dataset(cfg, type, kfold_th=None, kfold=None):
     dataroot = cfg.get(SECTION, 'data_path')
     patch_interval = cfg.getint(SECTION, 'patch_interval')
     patch_size = cfg.getint(SECTION, 'patch_size')
+    spectrum_limit = cfg.getint('Train', 'spectrum_limit')
     if type == "train":
         return dataset(dataroot, type, kfold_th, kfold, argument=True,
                        patch_interval=patch_interval,
-                       patch_size=patch_size)
+                       patch_size=patch_size,spectrum_limit=spectrum_limit)
     elif type == "test":
-        return dataset(dataroot, type, kfold_th, kfold, argument=False)
+        return dataset(dataroot, type, kfold_th, kfold, argument=False,spectrum_limit=spectrum_limit)
     elif type == "all":
-        return dataset(dataroot, type, argument=False)
+        return dataset(dataroot, type, argument=False,spectrum_limit=spectrum_limit)
     pass

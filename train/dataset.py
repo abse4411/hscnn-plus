@@ -19,11 +19,12 @@ class dataset(Dataset):
     """
 
     def __init__(self, dataroot, type, i_fold=1, n_fold=2, argument=False,
-                 patch_size=None, patch_interval=1):
+                 patch_size=None, patch_interval=1, spectrum_limit=65535):
         super(dataset, self).__init__()
         assert type == 'train' or type == 'test' or type == 'all'
         rgb_file_name, spe_file_name = [], []
         self.argument = argument
+        self.spectrum_limit = spectrum_limit
         for (roots, dirs, files) in os.walk(dataroot):
             if files == []: continue
             if "Thumbs.db" in files: files.remove("Thumbs.db")
@@ -97,7 +98,7 @@ class dataset(Dataset):
             img_arr = img_arr.view(img[k].size[1], img[k].size[0], len(img[k].getbands()))
             # put it from HWC to CHW format
             img_arr = img_arr.permute((2, 0, 1)).contiguous()
-            img[k] =img_arr.float().div(65535)
+            img[k] = img_arr.float().div(self.spectrum_limit)
 
         rgb, spe = img[0], torch.cat(img[1:], dim=0)
         return rgb, spe

@@ -5,7 +5,7 @@ from PIL import Image
 from train import resblock, resblock_256
 import os
 from tqdm import tqdm
-from test import test
+from train.test import test
 
 
 def mkdir(dir):
@@ -27,7 +27,7 @@ def last_path_name(name):
 
 
 def main():
-    model_path = './models/hscnn_5layer_dim10_281.pkl'
+    model_path = './models/hscnn_5layer_dim10_356.pkl'
     cfg = build_config('config.ini')
     result_path = './out'
 
@@ -45,7 +45,7 @@ def main():
     model_param = save_point['state_dict']
     model.load_state_dict(model_param)
 
-    test_data = build_dataset(cfg, type="test", kfold_th=5, kfold=5)
+    test_data = build_dataset(cfg, type="test", kfold_th=4, kfold=4)
     model = model.cuda()
     model.eval()
 
@@ -55,14 +55,15 @@ def main():
         f'{bfill("rmse")}:{rmse:9.4f}, {bfill("rmse_g")}:{rmse_g:9.4f}, {bfill("rrmse")}:{rrmse:9.4f}, {bfill("rrmse_g")}:{rrmse_g:9.4f}')
 
     # generate spe imgs
+    limit = cfg.getint('Train', 'spectrum_limit')
     with torch.no_grad():
         for i, (images, labels) in enumerate(test_data.get_dataloader(1, False)):
             out = model(images.cuda())
-            img_res = out.cpu().numpy() * 65535
+            img_res = out.cpu().numpy() * limit
             # shape from [1,C,H,W] to [C,H,W]
             img_res = np.squeeze(img_res, axis=0)
             # format right to  image data
-            img_res_limits = np.minimum(img_res, 65535)
+            img_res_limits = np.minimum(img_res, limit)
             img_res_limits = np.maximum(img_res_limits, 0)
             # shape from [C,H,W] to [H,W,C]
             arr = img_res_limits.transpose(1, 2, 0)
