@@ -58,7 +58,6 @@ def record_loss(loss_csv, epoch, iteration, epoch_time, lr, train_loss, test_los
     """ Record many results."""
     loss_csv.write('{},{},{},{},{},{}\n'.format(epoch, iteration, epoch_time, lr, train_loss, test_loss))
     loss_csv.flush()
-    loss_csv.close
 
 
 def get_reconstruction(input, num_split, dimension, model):
