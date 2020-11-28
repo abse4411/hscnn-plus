@@ -7,16 +7,24 @@ def bfill(s, width=6):
 
 
 def test(model, dataset):
+    # Stop training
     model.eval()
     cnt = len(dataset)
     rmse_avg, rmse_g_avg, rrmse_avg, rrmse_g_avg = 0.0, 0.0, 0.0, 0.0
-    for i, (rgb, spe) in enumerate(dataset.get_dataloader(1, False)):
-        rgb = rgb.cuda()
-        spe = spe.cuda()
-        with torch.no_grad():
+    max_val = torch.FloatTensor([255])
+    min_val = torch.FloatTensor([0])
+    if torch.cuda.is_available():
+        max_val = max_val.cuda()
+        min_val = min_val.cuda()
+    with torch.no_grad():
+        for i, (rgb, spe) in enumerate(dataset.get_dataloader(1, False)):
+            if torch.cuda.is_available():
+                rgb = rgb.cuda()
+                spe = spe.cuda()
+
             pred = model(rgb)
-            pred = pred * 255
-            spe = spe * 255
+            pred = torch.min(torch.max(pred * 255, min_val), max_val)
+            spe = torch.min(torch.max(spe * 255, min_val), max_val)
 
             rmse = compare_rmse(pred, spe)
             rmse_g = compare_rmse_g(pred, spe)
