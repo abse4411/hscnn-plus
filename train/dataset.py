@@ -39,7 +39,7 @@ class dataset(Dataset):
             assert 1 <= i_fold <= n_fold
             test_radio = 1.0 / float(n_fold)
             test_st_pos = int((i_fold - 1) * test_radio * img_length)
-            test_end_pos = int((test_st_pos + test_radio) * img_length)
+            test_end_pos = int(((i_fold * test_radio) * img_length))
             if type == 'train':
                 rgb_files = rgb_file_name[0:test_st_pos] + rgb_file_name[test_end_pos:img_length]
                 spe_files = spe_file_name[0:test_st_pos] + spe_file_name[test_end_pos:img_length]
