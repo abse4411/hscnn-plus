@@ -4,4 +4,5 @@ Z. Xiong, Z. Shi, H. Li, L. Wang, D. Liu and F. Wu, "HSCNN: CNN-Based Hyperspect
 
 PS: 
 Official code for hscnn: https://pan.baidu.com/s/17WYP7VG7m3arMz62WPagfQ?pwd=gi0d
+
 NTIRE2018 Validate Data: https://pan.baidu.com/s/1KQlPTLQRQ4R5bc67AqRYhA?pwd=3esw
